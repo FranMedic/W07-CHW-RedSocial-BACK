@@ -32,4 +32,23 @@ const userLogin = async (req, res, next) => {
   }
 };
 
-module.exports = { userLogin };
+const userRegister = async (req, res, next) => {
+  const newUser = req.body;
+  const user = await User.findOne({ username: newUser.username });
+  if (user) {
+    debug(chalk.red("Username alredy in use (T︵T,)"));
+    const error = new Error("Username alredy in use (T︵T,)");
+    error.code = 400;
+    next(error);
+  } else {
+    newUser.friends = [];
+    newUser.enemies = [];
+    newUser.photo = "";
+    newUser.bio = "";
+    newUser.password = await bcrypt.hash(newUser.password, 10);
+    User.create(newUser);
+    res.json(newUser);
+  }
+};
+
+module.exports = { userLogin, userRegister };
