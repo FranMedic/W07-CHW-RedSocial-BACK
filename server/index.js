@@ -1,9 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const debug = require("debug")("redS:server");
 
 const chalk = require("chalk");
-const debug = require("debug")("redS:server");
+const {
+  notFoundHandler,
+  generalErrorMiddleware,
+} = require("./middleware/errors");
 
 const app = express();
 
@@ -31,5 +35,8 @@ app.use((req, res, next) => {
   debug(chalk.green("REQUEST ARRIVED ʕง•ᴥ•ʔง"));
   next();
 });
+
+app.use(notFoundHandler);
+app.use(generalErrorMiddleware);
 
 module.exports = { initializeServer, app };
