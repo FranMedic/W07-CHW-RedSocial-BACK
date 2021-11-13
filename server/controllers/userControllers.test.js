@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const { JsonWebTokenError } = require("jsonwebtoken");
 
 const User = require("../../database/models/user");
-const { userLogin } = require("./userControllers");
+const { userLogin, userRegister } = require("./userControllers");
 
 jest.mock("../../database/models/user");
 jest.mock("bcrypt");
@@ -72,6 +72,30 @@ describe("Given a userLogin function", () => {
       await userLogin(req, res);
 
       expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+});
+
+describe("Given a userRegister function", () => {
+  describe("When it receives a body with a username already exists", () => {
+    test("then it should invoke the next function with and error with a mesage and status inside", async () => {
+      const usernameFake = "patatafrita";
+
+      const req = {
+        body: {
+          username: usernameFake,
+        },
+      };
+      const next = jest.fn();
+      User.findOne = jest.fn().mockResolvedValue(true);
+      const error = new Error("Username alredy in use (T︵T,)");
+      error.code = 400;
+
+      await userRegister(req, null, next);
+
+      expect(User.findOne).toHaveBeenCalled();
+      expect(next.mock.calls[0][0]).toHaveProperty("message", error.message);
+      expect(next.mock.calls[0][0]).toHaveProperty("code", error.code);
     });
   });
 });
