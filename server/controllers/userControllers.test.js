@@ -98,4 +98,26 @@ describe("Given a userRegister function", () => {
       expect(next.mock.calls[0][0]).toHaveProperty("code", error.code);
     });
   });
+
+  describe("When it receives a request with a new username", () => {
+    test("then it should respond with the new user", async () => {
+      const userFake = {
+        name: "Patata",
+        username: "franny",
+        password: "quiereComida",
+      };
+
+      const req = {
+        body: userFake,
+      };
+      const res = {
+        json: jest.fn(),
+      };
+      User.findOne = jest.fn().mockResolvedValue(false);
+
+      await userRegister(req, res);
+
+      expect(res.json).toHaveBeenCalledWith(userFake);
+    });
+  });
 });
