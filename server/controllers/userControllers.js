@@ -2,6 +2,8 @@ require("dotenv").config();
 const debug = require("debug")("redS:userController");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
+const { JsonWebTokenError } = require("jsonwebtoken");
+
 const User = require("../../database/models/user");
 
 const userLogin = async (req, res, next) => {
@@ -20,7 +22,7 @@ const userLogin = async (req, res, next) => {
       error.code = 401;
       next(error);
     } else {
-      const token = jwt.sign(
+      const token = JsonWebTokenError.sign(
         { id: user.id, name: user.name },
         process.env.TOKEN_SECRETE,
         { expiresIn: 72 * 60 * 60 }
