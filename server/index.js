@@ -8,6 +8,7 @@ const {
   notFoundHandler,
   generalErrorMiddleware,
 } = require("./middleware/errors");
+const usersRoutes = require("./routes/usersRoutes");
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use((req, res, next) => {
   debug(chalk.green("REQUEST ARRIVED ʕง•ᴥ•ʔง"));
   next();
 });
+
+app.use("/users", usersRoutes);
 
 app.use(notFoundHandler);
 app.use(generalErrorMiddleware);
