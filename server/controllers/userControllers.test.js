@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { JsonWebTokenError } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const User = require("../../database/models/user");
 const { userLogin, userRegister } = require("./userControllers");
@@ -66,7 +66,7 @@ describe("Given a userLogin function", () => {
       };
       bcrypt.compare = jest.fn().mockResolvedValue(true);
       const expectedToken = "pulpo";
-      JsonWebTokenError.sign = jest.fn().mockReturnValue(expectedToken);
+      jwt.sign = jest.fn().mockReturnValue(expectedToken);
       const expectedResponse = { token: expectedToken };
       await userLogin(req, res);
 
