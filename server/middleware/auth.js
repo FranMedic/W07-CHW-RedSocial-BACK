@@ -1,8 +1,8 @@
-const { JsonWebTokenError } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   const authHeader = req.header("Authorization");
   if (!authHeader) {
     const error = new Error("Not authorized");
@@ -17,15 +17,12 @@ const auth = (req, res, next) => {
       next(error);
     } else {
       try {
-        const userData = JsonWebTokenError.verify(
-          token,
-          process.env.TOKEN_SECRETE
-        );
+        const userData = await jwt.verify(token, process.env.TOKEN_SECRETE);
         req.userId = userData.id;
         req.userName = userData.name;
         next();
-      } catch (error) {
-        error.message = "Wrong token";
+      } catch {
+        const error = new Error("Wrong token");
         error.code = 401;
         next(error);
       }
