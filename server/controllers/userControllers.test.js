@@ -53,7 +53,6 @@ describe("Given a userLogin function", () => {
         expectedError.message
       );
       expect(next.mock.calls[0][0]).toHaveProperty("code", expectedError.code);
-      console.log(next.mock.calls);
     });
   });
 
