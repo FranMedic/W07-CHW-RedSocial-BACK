@@ -11,6 +11,7 @@ const {
 const usersRoutes = require("./routes/usersRoutes");
 
 const app = express();
+app.use(cors());
 
 const initializeServer = (port) =>
   new Promise((resolve, reject) => {
@@ -28,7 +29,6 @@ const initializeServer = (port) =>
     resolve(server);
   });
 
-app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
